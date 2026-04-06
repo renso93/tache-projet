@@ -1,0 +1,17 @@
+# Fichiers à ne PAS copier dans l'image
+.env              # ← variables sensibles (mots de passe !)
+.venv             # ← environnement virtuel (recréé dans l'image)
+__pycache__       # ← fichiers compilés Python
+*.pyc             # ← fichiers compilés Python
+test.db           # ← base de données de test
+.pytest_cache     # ← cache des tests
+.vscode            # ← fichiers de configuration de l'éditeur
+.idea              # ← fichiers de configuration de l'IDE
+.gitignore
+
+# Dossiers à ne PAS copier dans l'image
+tests/            # ← dossiers de tests (non nécessaires pour l'exécution)
+docs/             # ← documentation (non nécessaire pour l'exécution)
+data/             # ← données brutes (non nécessaires pour l'exécution)
+logs/             # ← fichiers de logs (générés à l'exécution)
+.git/

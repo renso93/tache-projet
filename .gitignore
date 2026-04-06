@@ -1,0 +1,24 @@
+# Environnement virtuel
+.env/
+.venv/
+venv/
+
+# Variables sensibles
+.env
+
+# Base de données de test
+test.db
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Cache pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# Docker
+*.log

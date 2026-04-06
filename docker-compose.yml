@@ -1,0 +1,24 @@
+
+
+services:
+
+  db:
+    image: postgres:17
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"  # 5433 sur ton PC → 5432 dans le conteneur
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # données persistantes
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db  # attend que PostgreSQL soit prêt
+
+volumes:
+  postgres_data:
