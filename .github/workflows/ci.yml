@@ -10,30 +10,52 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    # Ajout d'un service PostgreSQL pour éviter les erreurs d'initialisation de l'app
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: {secret.DB_PASSWORD}
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        # Attendre que postgres soit prêt
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    # Etape 1 : Récupérer le code source
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # Étape 1 : Récupérer le code source
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Etape 2 : Installer python
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+      # Étape 2 : Installer Python avec mise en cache des dépendances
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
 
-    # Etape 3 : Installer les dépendances
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      # Étape 3 : Installer les dépendances
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest pytest-asyncio # Assurez-vous que pytest est présent
 
-    # Etape 4 : Lancer les tests
-    - name: Run tests
-      env:
-        DB_USER: postgres
-        DB_PASSWORD: password
-        DB_HOST: localhost
-      #  DB_PORT: 5432
-        DB_NAME: test_db
-        SECRET_KEY: test_secret_key
-      run: pytest test_main.py -v
+      # Étape 4 : Lancer les tests
+      - name: Run tests
+        env:
+          # Variables d'environnement pour l'application
+          DB_USER: postgres
+          DB_PASSWORD: {secret.DB_PASSWORD}
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: test_db
+          SECRET_KEY: {secret.SECRET_KEY}
+        run: |
+          # On s'assure que pytest trouve bien le fichier
+          pytest test_main.py -v
