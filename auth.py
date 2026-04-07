@@ -36,7 +36,7 @@ def creer_token(data: dict) -> str:
     data.update({"exp": expiration})
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
-""" def verifier_token(token: str, credentials_exception):
+def verifier_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: int = payload.get("user_id")
@@ -44,7 +44,7 @@ def creer_token(data: dict) -> str:
             raise credentials_exception
         return user_id
     except JWTError:
-        raise credentials_exception """
+        raise credentials_exception
     
 def get_utilisateur_actuel(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:

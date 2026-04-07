@@ -11,21 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     # Ajout d'un service PostgreSQL pour éviter les erreurs d'initialisation de l'app
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: {secret.DB_PASSWORD}
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        # Attendre que postgres soit prêt
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+  services:
+    postgres:
+      image: postgres:15
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: ${{secret.DB_PASSWORD}}
+        POSTGRES_DB: test_db
+      ports:
+        - 5432:5432
+      # Attendre que postgres soit prêt
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
 
     steps:
       # Étape 1 : Récupérer le code source
@@ -51,11 +51,11 @@ jobs:
         env:
           # Variables d'environnement pour l'application
           DB_USER: postgres
-          DB_PASSWORD: {secret.DB_PASSWORD}
+          DB_PASSWORD: ${{secret.DB_PASSWORD}}
           DB_HOST: localhost
           DB_PORT: 5432
           DB_NAME: test_db
-          SECRET_KEY: {secret.SECRET_KEY}
+          SECRET_KEY: ${{secret.SECRET_KEY}}
         run: |
           # On s'assure que pytest trouve bien le fichier
           pytest test_main.py -v
