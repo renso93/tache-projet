@@ -11,6 +11,12 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# --- Accueil --- 
+@app.post("/")
+def accueil():
+    api_url = "http//:127.0.0.1/docs"
+    return f"Bienvenue sur mon API, merci de visiter {api_url}"
+
 # --- Auth ---
 @app.post("/register")
 def register(user: schemas.UtilisateurCreate, db: Session = Depends(get_db)):

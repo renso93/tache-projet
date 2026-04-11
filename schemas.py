@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class TacheCreate(BaseModel):
     titre: str
@@ -8,8 +8,7 @@ class TacheCreate(BaseModel):
 class TacheResponse(TacheCreate):
     id:int
 
-    class Config:
-        orm_attribute = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UtilisateurCreate(BaseModel):
     nom: str
@@ -23,5 +22,4 @@ class Token(BaseModel):
 class UtilisateurResponse(UtilisateurCreate):
     id: int
 
-    class Config:
-        orm_attribute = True
+    model_config = ConfigDict(from_attributes=True)

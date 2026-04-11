@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
@@ -9,7 +9,7 @@ import models
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(encoding="utf-8")
 
 # Configuration pour JWT
 SECRET_KEY = os.getenv("SECRET_KEY", "votre_cle_secrete_pour_jwt")
@@ -32,7 +32,7 @@ def verifier_mot_de_passe(mot_de_passe: str, hash: str) -> bool:
     return pwd_context.verify(mot_de_passe, hash)
 
 def creer_token(data: dict) -> str:
-    expiration  = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) 
+    expiration  = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) 
     data.update({"exp": expiration})
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
